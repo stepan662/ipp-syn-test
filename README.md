@@ -10,8 +10,11 @@
 * Naklonujte si testy do složky vedle vašeho projektu
 
 ```
-./ipp-syn-test
-./ipp-syn-project
+- ipp-syn-test
+| - test.sh
+| - ...
+- ipp-syn-project
+| - syn.php
 ```
 
 * Database configuration
