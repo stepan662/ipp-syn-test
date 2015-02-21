@@ -19,6 +19,7 @@ ipp-syn-project
 
 * V souboru `test.sh` nastavte proměnné `SCRIPT` a `INTERPRETER`
 * Spusťe ve složce s testy příkazem `./test.sh`
+* Jsou zahrnuty i testy na zkrácené parametry a rozšíření HTM
 
 ### Co dělat když najdu chybu v testu? ###
 Projděte nejdříve prosím:
