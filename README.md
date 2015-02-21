@@ -1,18 +1,19 @@
 # README #
 
-This README would normally document whatever steps are necessary to get your application up and running.
+### Testy k IPP projektu SYN (zvýraznění syntaxe) ###
 
-### What is this repository for? ###
+* Obsahuje testy na většinu chytáků ze zadání
+* Pravděpodobně obsahuje chyby, pokud nějaké naleznete, prosím o nahlášení
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+### Jak to nastavit, aby to fungovalo? ###
 
-### How do I get set up? ###
+* Naklonujte si testy do složky vedle vašeho projektu
 
-* Summary of set up
-* Configuration
-* Dependencies
+```
+./ipp-syn-test
+./ipp-syn-project
+```
+
 * Database configuration
 * How to run tests
 * Deployment instructions
