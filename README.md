@@ -3,7 +3,8 @@
 ### Testy k IPP projektu SYN (zvýraznění syntaxe) ###
 
 * Obsahuje testy na většinu chytáků ze zadání
-* Pravděpodobně obsahuje chyby, pokud nějaké naleznete, prosím o nahlášení
+* Pokud se vám nějaký test nebude zdát správný, projděte prosím nejdřív zadání a fórum
+* Jinak připomínky jsou vítány
 
 ### Jak to nastavit, aby to fungovalo? ###
 
@@ -18,17 +19,9 @@ ipp-syn-project
  | - ...
 ```
 
-* Database configuration
-* How to run tests
-* Deployment instructions
+* V souboru 'test.sh' nastavte proměnné 'SCRIPT' a 'INTERPRETER'
+* Spusťe ve složce s testy příkazem './test.sh'
 
-### Contribution guidelines ###
+### Kontakt ###
 
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+* email: granat.stepan@gmail.com
