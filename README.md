@@ -19,9 +19,10 @@ ipp-syn-project
  | - ...
 ```
 
-* V souboru 'test.sh' nastavte proměnné 'SCRIPT' a 'INTERPRETER'
-* Spusťe ve složce s testy příkazem './test.sh'
+* V souboru `test.sh` nastavte proměnné `SCRIPT` a `INTERPRETER`
+* Spusťe ve složce s testy příkazem `./test.sh`
 
 ### Kontakt ###
 
-* email: granat.stepan@gmail.com
+* email: `granat.stepan@gmail.com`
+* nebo na `FB`
