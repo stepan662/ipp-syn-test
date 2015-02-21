@@ -28,7 +28,7 @@ Projděte nejdříve prosím:
 3. [fórum](https://wis.fit.vutbr.cz/FIT/st/course-sl.php?id=561253)
 4. [FAQ](https://wis.fit.vutbr.cz/FIT/st/cwk.php?title=IPP:FAQ&csid=561253&id=9999)
 
-Když to opravdu bude chyba potom:
+Když to opravdu bude chyba potom mi prosím pošlete email nebo tak něco.
 
 ### Kontakt ###
 
