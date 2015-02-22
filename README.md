@@ -6,20 +6,24 @@ Obsahuje testy na většinu chytáků ze zadání
 
 ### Jak to nastavit, aby to fungovalo? ###
 
-* Naklonujte si testy do složky vedle vašeho projektu
+1. Naklonujte si testy do složky vedle vašeho projektu
 
 ```
 ipp-syn-test
  | - test.sh
  \ - ...
-ipp-syn-project
+ipp-syn
  | - syn.php
  \ - ...
 ```
 
-* V souboru `test.sh` nastavte proměnné `SCRIPT` a `INTERPRETER`
-* Spusťe ve složce s testy příkazem `./test.sh`
-* Jsou zahrnuty i testy na zkrácené parametry a rozšíření HTM
+2. V souboru `test.sh` nastavte proměnné:
+
+* `SCRIPT` na relativni adresu k vašemu projektu (např. `../ipp-syn/syn.php`)
+* `INTERPRETER` na `php` (python by měl taky fungovat) na merlinovi je nutné zadat `php -d open_basedir=""`
+
+3. Spusťe ve složce s testy příkazem `./test.sh`
+4. Jsou zahrnuty i testy na zkrácené parametry a rozšíření HTM
 
 ### Co dělat když najdu chybu v testu? ###
 Projděte nejdříve prosím:
