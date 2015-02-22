@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SCRIPT="../IPP1/ipp1.php"
+SCRIPT="../ipp-syn/syn.php"
 INTERPRETER="php"
 
 if [ `basename "$PWD"` != "ipp-syn-test" ]; then
