@@ -20,7 +20,7 @@ ipp-syn
     * `SCRIPT` na relativni adresu k vašemu projektu (např. `../ipp-syn/syn.php`)
     * `INTERPRETER` na `php` (python by měl taky fungovat) na merlinovi je nutné zadat `php -d open_basedir=""`
 3. Spusťe ve složce s testy příkazem `./test.sh`
-4. Jsou zahrnuty i testy na zkrácené parametry a rozšíření HTM
+4. Jsou zahrnuty i testy na zkrácené parametry a rozšíření HTM, což není povinné
 
 ### Co dělat když najdu chybu v testu? ###
 Projděte nejdříve prosím:
