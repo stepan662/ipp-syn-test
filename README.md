@@ -30,7 +30,7 @@ Projděte nejdříve prosím:
 3. [fórum](https://wis.fit.vutbr.cz/FIT/st/course-sl.php?id=561253)
 4. wiki a FAQ
 
-Když to opravdu bude chyba potom mi prosím pošlete email nebo tak něco.
+Když to opravdu bude chyba potom mi prosím pošlete email nebo můžete přímo napsat na fórum.
 
 ### Kontakt ###
 
