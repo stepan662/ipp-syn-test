@@ -6,8 +6,6 @@ Obsahuje testy na většinu chytáků ze zadání
 
 ### Jak to nastavit, aby to fungovalo? ###
 
-1. Naklonujte si testy do složky vedle vašeho projektu
-
 ```
 ipp-syn-test
  | - test.sh
@@ -17,11 +15,10 @@ ipp-syn
  \ - ...
 ```
 
+1. Naklonujte si testy do složky vedle vašeho projektu, struktura složek je znázorněna výše
 2. V souboru `test.sh` nastavte proměnné:
-
-* `SCRIPT` na relativni adresu k vašemu projektu (např. `../ipp-syn/syn.php`)
-* `INTERPRETER` na `php` (python by měl taky fungovat) na merlinovi je nutné zadat `php -d open_basedir=""`
-
+    * `SCRIPT` na relativni adresu k vašemu projektu (např. `../ipp-syn/syn.php`)
+    * `INTERPRETER` na `php` (python by měl taky fungovat) na merlinovi je nutné zadat `php -d open_basedir=""`
 3. Spusťe ve složce s testy příkazem `./test.sh`
 4. Jsou zahrnuty i testy na zkrácené parametry a rozšíření HTM
 
