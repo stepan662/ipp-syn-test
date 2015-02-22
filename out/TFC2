@@ -1,0 +1,260 @@
+<font color=#808080>/* <br />
+ * math.h<br />
+ * This file has no copyright/assigned and is placed in the Public Domain.<br />
+ * This file is a part of the mingw-runtime package.<br />
+ * No warranty is given; refer to the file DISCLAIMER within the package.<br />
+ *<br />
+ * Mathematical functions.<br />
+ *<br />
+ */</font><br />
+<br />
+<font color=#DB0000>#ifndef</font> _MATH_H_<br />
+<font color=#DB0000>#define</font> _MATH_H_<br />
+<br />
+<font color=#DB0000>#if</font> __GNUC__ >= 3<br />
+<font color=#DB0000>#pragma</font> GCC system_header<br />
+<font color=#DB0000>#endif</font><br />
+<br />
+<font color=#808080>/* All the headers include this file. */</font><br />
+<font color=#DB0000>#include</font> <_mingw.h><br />
+<br />
+<font color=#808080>/*<br />
+ * Types for the _exception structure.<br />
+ */</font><br />
+<br />
+<font color=#DB0000>#define</font>	_PLOSS		6	<font color=#808080>/* partial loss of precision */</font><br />
+<br />
+<font color=#808080>/*<br />
+ * Exception types with non-ANSI names for compatibility.<br />
+ */</font><br />
+<br />
+<font color=#DB0000>#ifndef</font>	__STRICT_ANSI__<br />
+<font color=#DB0000>#ifndef</font>	_NO_OLDNAMES<br />
+<br />
+<font color=#DB0000>#define</font>	TLOSS		_TLOSS<br />
+<font color=#DB0000>#define</font>	PLOSS		_PLOSS<br />
+<br />
+<font color=#DB0000>#endif</font>	<font color=#808080>/* Not _NO_OLDNAMES */</font><br />
+<font color=#DB0000>#endif</font>	<font color=#808080>/* Not __STRICT_ANSI__ */</font><br />
+<br />
+<font color=#808080>/* Traditional/XOPEN math constants (double precison) */</font><br />
+<br />
+<font color=#DB0000>#define</font> M_SQRT2		<font color=#1B0087>1.41421356237309504880</font><br />
+<font color=#DB0000>#define</font> M_SQRT1_2	<font color=#1B0087>0.70710678118654752440</font><br />
+<font color=#DB0000>#endif</font><br />
+<br />
+<font color=#808080>/* These are also defined in Mingw float.h; needed here as well to work <br />
+   around GCC build issues.  */</font><br />
+<br />
+<font color=#DB0000>#define</font>	_FPCLASS_PN	0x0100	<font color=#808080>/* Positive Normal */</font><br />
+<font color=#DB0000>#define</font>	_FPCLASS_PINF	0x0200	<font color=#808080>/* Positive Infinity */</font><br />
+<br />
+<font color=#DB0000>#ifndef</font> RC_INVOKED<br />
+<br />
+<font color=#DB0000>#ifdef</font> __cplusplus<br />
+<font color=#DB0000>extern</font> <font color=#999600>"C"</font> {<br />
+<font color=#DB0000>#endif</font><br />
+<br />
+<font color=#808080>/*<br />
+ * HUGE_VAL is returned by strtod when the value would overflow the<br />
+ * representation of 'double'. There are other uses as well.<br />
+ *<br />
+ * __imp__HUGE is a pointer to the actual variable _HUGE in<br />
+ * MSVCRT.DLL. If we used _HUGE directly we would get a pointer<br />
+ * to a thunk function.<br />
+ *<br />
+ * NOTE: The CRTDLL version uses _HUGE_dll instead.<br />
+ */</font><br />
+<br />
+<br />
+<font color=#DB0000>#endif</font> <font color=#808080>/* __DECLSPEC_SUPPORTED */</font><br />
+<br />
+struct _exception<br />
+{<br />
+<font color=#0041B0>	double	</font>retval;<br />
+};<br />
+<br />
+_CRTIMP<font color=#0041B0> double </font>__cdecl modf (double, double*);<br />
+_CRTIMP<font color=#0041B0> double </font>__cdecl fmod (double, double);<br />
+<br />
+<font color=#808080>/* Excess precision when using a 64-bit mantissa for FPU math ops can<br />
+   cause unexpected results with some of the MSVCRT math functions.  For<br />
+   example, unless the function return value is stored (truncating to<br />
+   53-bit mantissa), calls to pow with both x and y as integral values<br />
+   sometimes produce a non-integral result.<br />
+   One workaround is to reset the FPU env to 53-bit mantissa<br />
+   by a call to fesetenv (FE_PC53_ENV).  Amother is to force storage<br />
+   of the return value of individual math functions using wrappers.<br />
+   NB, using these wrappers will disable builtin math functions and<br />
+   hence disable the folding of function results at compile time when<br />
+   arguments are constant.  */</font><br />
+<br />
+<font color=#DB0000>#if</font> 0<br />
+<font color=#DB0000>#define</font> __DEFINE_FLOAT_STORE_MATHFN_D1(fn1)	\<br />
+<font color=#DB0000>static</font> __inline__<font color=#0041B0> double	</font>		\<br />
+__float_store_ <font color=#DB0000>##</font> fn1 (double x)		\<br />
+{						\<br />
+   __volatile__<font color=#0041B0> double </font>res = (fn1) (x);		\<br />
+  return res;					\<br />
+}<br />
+<br />
+<font color=#DB0000>#define</font> __DEFINE_FLOAT_STORE_MATHFN_D2(fn2)	\<br />
+<font color=#DB0000>static</font> __inline__<font color=#0041B0> double	</font>		\<br />
+__float_store_ <font color=#DB0000>##</font> fn2 (double x,<font color=#0041B0> double </font>y)	\<br />
+{						\<br />
+  __volatile__<font color=#0041B0> double </font>res = (fn2) (x, y);	\<br />
+  return res;					\<br />
+}<br />
+<font color=#DB0000>#endif</font><br />
+<br />
+<font color=#808080>/* For example, here is how to force the result of the pow function<br />
+   to be stored:   */</font><br />
+<font color=#DB0000>#if</font> 0<br />
+<font color=#DB0000>#undef</font> pow<br />
+<font color=#808080>/* Define the ___float_store_pow function and use it instead of pow().  */</font><br />
+__DEFINE_FLOAT_STORE_MATHFN_D2 (pow)<br />
+<font color=#DB0000>#define</font> pow __float_store_pow<br />
+<font color=#DB0000>#endif</font><br />
+<br />
+<font color=#DB0000>#ifndef</font> __STRICT_ANSI__<br />
+<br />
+<font color=#808080>/* Complex number (for _cabs). This is the MS version. The ISO<br />
+   C99 counterpart _Complex is an intrinsic type in GCC and<br />
+   'complex' is defined as a macro.  See complex.h  */</font><br />
+struct _complex<br />
+{<br />
+<font color=#0041B0>	double	</font>x;	<font color=#808080>/* Real part */</font><br />
+<font color=#0041B0>	double	</font>y;	<font color=#808080>/* Imaginary part */</font><br />
+};<br />
+<br />
+_CRTIMP<font color=#0041B0> int </font>__cdecl _matherr (struct _exception *);<br />
+<br />
+<font color=#808080>/* These are also declared in Mingw float.h; needed here as well to work <br />
+   around GCC build issues.  */</font><br />
+<font color=#808080>/* BEGIN FLOAT.H COPY */</font><br />
+<font color=#808080>/*<br />
+ * IEEE recommended functions<br />
+ */</font><br />
+<br />
+_CRTIMP<font color=#0041B0> double </font>__cdecl _scalb (double, long);<br />
+<br />
+_CRTIMP<font color=#0041B0> int </font>__cdecl _finite (double);<br />
+_CRTIMP<font color=#0041B0> int </font>__cdecl _fpclass (double);<br />
+_CRTIMP<font color=#0041B0> int </font>__cdecl _isnan (double);<br />
+<br />
+<font color=#808080>/* END FLOAT.H COPY */</font><br />
+<br />
+<font color=#808080>/*<br />
+ * Non-underscored versions of non-ANSI functions.<br />
+ * These reside in liboldnames.a.<br />
+ */</font><br />
+<br />
+<font color=#DB0000>#if</font> !defined (_NO_OLDNAMES)<br />
+<br />
+_CRTIMP<font color=#0041B0> int </font>__cdecl fpclass (double);<br />
+<br />
+<font color=#DB0000>#define</font> FP_PNORM   _FPCLASS_PN<br />
+<br />
+<font color=#DB0000>#endif</font> <font color=#808080>/* Not _NO_OLDNAMES */</font><br />
+<br />
+<font color=#808080>/* This require msvcr70.dll or higher. */</font> <br />
+<font color=#DB0000>#if</font> __MSVCRT_VERSION__ >= 0x0700<br />
+_CRTIMP<font color=#0041B0> int </font>__cdecl _set_SSE2_enable (int);<br />
+<font color=#DB0000>#endif</font> <font color=#808080>/* __MSVCRT_VERSION__ >= 0x0700 */</font><br />
+<br />
+<font color=#DB0000>#endif</font> <font color=#808080>/* __STRICT_ANSI__ */</font><br />
+<br />
+<font color=#DB0000>#ifndef</font> __NO_ISOCEXT<br />
+<font color=#DB0000>#if</font> (defined (__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) \<br />
+	|| !defined __STRICT_ANSI__ || defined __cplusplus<br />
+<br />
+<font color=#DB0000>#define</font> INFINITY (<font color=#1B0087>1.0</font>F/<font color=#1B0087>0.0</font>F)<br />
+<br />
+<font color=#808080>/* <font color=#1B0087>7.12</font>.<font color=#1B0087>3.1</font> */</font><br />
+<font color=#808080>/*<br />
+   Return values for fpclassify.<br />
+   These are based on Intel x87 fpu condition codes<br />
+   in the high byte of status word and differ from<br />
+   the return values for MS IEEE 754 extension _fpclass()<br />
+*/</font><br />
+<font color=#DB0000>#define</font> FP_ZERO		0x4000<br />
+<font color=#DB0000>#define</font> FP_SUBNORMAL	(FP_NORMAL | FP_ZERO)<br />
+<font color=#808080>/* 0x0200 is signbit mask */</font><br />
+<br />
+<font color=#808080>/*<br />
+  We can't inline<font color=#0041B0> float </font>or double, because we want to ensure truncation<br />
+  to semantic type before classification. <br />
+  (A normal<font color=#0041B0> long </font>double value might become subnormal when <br />
+  converted to double, and zero when converted to float.)<br />
+*/</font><br />
+<br />
+<font color=#DB0000>extern</font><font color=#0041B0> int </font>__cdecl __fpclassifyf (float);<br />
+<font color=#DB0000>extern</font><font color=#0041B0> int </font>__cdecl __fpclassify (double);<br />
+<br />
+__CRT_INLINE<font color=#0041B0> int </font>__cdecl __fpclassifyl (long<font color=#0041B0> double </font>x){<br />
+ <font color=#0041B0> unsigned </font>short sw;<br />
+  __asm__ (<font color=#999600>"fxam; fstsw %%ax;"</font> : <font color=#999600>"=a"</font> (sw): <font color=#999600>"t"</font> (x));<br />
+  return sw & (FP_NAN | FP_NORMAL | FP_ZERO );<br />
+}<br />
+<br />
+<font color=#DB0000>#define</font> fpclassify(x) (<font color=#DB0000>sizeof</font> (x) == <font color=#DB0000>sizeof</font> (float) ? __fpclassifyf (x)	  \<br />
+		       : <font color=#DB0000>sizeof</font> (x) == <font color=#DB0000>sizeof</font> (double) ? __fpclassify (x) \<br />
+		       : __fpclassifyl (x))<br />
+<br />
+<font color=#808080>/* <font color=#1B0087>7.12</font>.<font color=#1B0087>3.2</font> */</font><br />
+<font color=#DB0000>#define</font> isfinite(x) ((fpclassify(x) & FP_NAN) == 0)<br />
+<br />
+<font color=#808080>/* <font color=#1B0087>7.12</font>.<font color=#1B0087>3.3</font> */</font><br />
+<font color=#DB0000>#define</font> isinf(x) (fpclassify(x) == FP_INFINITE)<br />
+<br />
+<font color=#808080>/* <font color=#1B0087>7.12</font>.<font color=#1B0087>3.4</font> */</font><br />
+<font color=#808080>/* We don't need to worry about trucation here:<br />
+   A NaN stays a NaN. */</font><br />
+<br />
+__CRT_INLINE<font color=#0041B0> int </font>__cdecl __isnan (double _x)<br />
+{<br />
+ <font color=#0041B0> unsigned </font>short sw;<br />
+  __asm__ (<font color=#999600>"fxam;"</font><br />
+	   <font color=#999600>"fstsw %%ax"</font>: <font color=#999600>"=a"</font> (sw) : <font color=#999600>"t"</font> (_x));<br />
+  return (sw & (FP_NAN | FP_NORMAL | FP_INFINITE | FP_ZERO | FP_SUBNORMAL))<br />
+    == FP_NAN;<br />
+}<br />
+<br />
+<font color=#DB0000>#define</font> isnan(x) (<font color=#DB0000>sizeof</font> (x) == <font color=#DB0000>sizeof</font> (float) ? __isnanf (x)	\<br />
+		  : <font color=#DB0000>sizeof</font> (x) == <font color=#DB0000>sizeof</font> (double) ? __isnan (x)	\<br />
+		  : __isnanl (x))<br />
+<br />
+<font color=#808080>/* <font color=#1B0087>7.12</font>.<font color=#1B0087>6.12</font>  Double in C89 */</font><br />
+<font color=#DB0000>extern</font><font color=#0041B0> float </font>__cdecl modff (float, float*);<br />
+<font color=#DB0000>extern</font><font color=#0041B0> long </font>double __cdecl modfl (long double,<font color=#0041B0> long </font>double*);<br />
+<br />
+<br />
+<font color=#808080>/* <font color=#1B0087>7.12</font>.<font color=#1B0087>9.2</font> Double in C89 */</font><br />
+<font color=#DB0000>extern</font><font color=#0041B0> float </font>__cdecl floorf (float);<br />
+<font color=#DB0000>extern</font><font color=#0041B0> long </font>double __cdecl floorl (long double);<br />
+<br />
+<font color=#808080>/* <font color=#1B0087>7.12</font>.<font color=#1B0087>9.3</font> */</font><br />
+<font color=#DB0000>extern</font><font color=#0041B0> double </font>__cdecl nearbyint ( double);<br />
+<font color=#DB0000>extern</font><font color=#0041B0> float </font>__cdecl nearbyintf (float);<br />
+<font color=#DB0000>extern</font><font color=#0041B0> long </font>double __cdecl nearbyintl (long double);<br />
+<br />
+<font color=#808080>/* <font color=#1B0087>7.12</font>.<font color=#1B0087>9.4</font> */</font><br />
+<font color=#808080>/* round, using fpu control word settings */</font><br />
+__CRT_INLINE<font color=#0041B0> double </font>__cdecl rint (double x)<br />
+{<br />
+ <font color=#0041B0> double </font>retval;<br />
+  __asm__ (<font color=#999600>"frndint;"</font>: <font color=#999600>"=t"</font> (retval) : <font color=#999600>"0"</font> (x));<br />
+  return retval;<br />
+}<br />
+<br />
+<font color=#DB0000>#endif</font><br />
+<br />
+<font color=#DB0000>#endif</font> <font color=#808080>/* __STDC_VERSION__ >= 199901L */</font><br />
+<font color=#DB0000>#endif</font> <font color=#808080>/* __NO_ISOCEXT */</font><br />
+<br />
+<font color=#DB0000>#ifdef</font> __cplusplus<br />
+}<br />
+<font color=#DB0000>#endif</font><br />
+<font color=#DB0000>#endif</font>	<font color=#808080>/* Not RC_INVOKED */</font><br />
+<br />
+<font color=#DB0000>#endif</font>	<font color=#808080>/* Not _MATH_H_ */</font>

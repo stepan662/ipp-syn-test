@@ -1,0 +1,260 @@
+/* 
+ * math.h
+ * This file has no copyright/assigned and is placed in the Public Domain.
+ * This file is a part of the mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER within the package.
+ *
+ * Mathematical functions.
+ *
+ */
+
+#ifndef _MATH_H_
+#define _MATH_H_
+
+#if __GNUC__ >= 3
+#pragma GCC system_header
+#endif
+
+/* All the headers include this file. */
+#include <_mingw.h>
+
+/*
+ * Types for the _exception structure.
+ */
+
+#define	_PLOSS		6	/* partial loss of precision */
+
+/*
+ * Exception types with non-ANSI names for compatibility.
+ */
+
+#ifndef	__STRICT_ANSI__
+#ifndef	_NO_OLDNAMES
+
+#define	TLOSS		_TLOSS
+#define	PLOSS		_PLOSS
+
+#endif	/* Not _NO_OLDNAMES */
+#endif	/* Not __STRICT_ANSI__ */
+
+/* Traditional/XOPEN math constants (double precison) */
+
+#define M_SQRT2		1.41421356237309504880
+#define M_SQRT1_2	0.70710678118654752440
+#endif
+
+/* These are also defined in Mingw float.h; needed here as well to work 
+   around GCC build issues.  */
+
+#define	_FPCLASS_PN	0x0100	/* Positive Normal */
+#define	_FPCLASS_PINF	0x0200	/* Positive Infinity */
+
+#ifndef RC_INVOKED
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/*
+ * HUGE_VAL is returned by strtod when the value would overflow the
+ * representation of 'double'. There are other uses as well.
+ *
+ * __imp__HUGE is a pointer to the actual variable _HUGE in
+ * MSVCRT.DLL. If we used _HUGE directly we would get a pointer
+ * to a thunk function.
+ *
+ * NOTE: The CRTDLL version uses _HUGE_dll instead.
+ */
+
+
+#endif /* __DECLSPEC_SUPPORTED */
+
+struct _exception
+{
+	double	retval;
+};
+
+_CRTIMP double __cdecl modf (double, double*);
+_CRTIMP double __cdecl fmod (double, double);
+
+/* Excess precision when using a 64-bit mantissa for FPU math ops can
+   cause unexpected results with some of the MSVCRT math functions.  For
+   example, unless the function return value is stored (truncating to
+   53-bit mantissa), calls to pow with both x and y as integral values
+   sometimes produce a non-integral result.
+   One workaround is to reset the FPU env to 53-bit mantissa
+   by a call to fesetenv (FE_PC53_ENV).  Amother is to force storage
+   of the return value of individual math functions using wrappers.
+   NB, using these wrappers will disable builtin math functions and
+   hence disable the folding of function results at compile time when
+   arguments are constant.  */
+
+#if 0
+#define __DEFINE_FLOAT_STORE_MATHFN_D1(fn1)	\
+static __inline__ double			\
+__float_store_ ## fn1 (double x)		\
+{						\
+   __volatile__ double res = (fn1) (x);		\
+  return res;					\
+}
+
+#define __DEFINE_FLOAT_STORE_MATHFN_D2(fn2)	\
+static __inline__ double			\
+__float_store_ ## fn2 (double x, double y)	\
+{						\
+  __volatile__ double res = (fn2) (x, y);	\
+  return res;					\
+}
+#endif
+
+/* For example, here is how to force the result of the pow function
+   to be stored:   */
+#if 0
+#undef pow
+/* Define the ___float_store_pow function and use it instead of pow().  */
+__DEFINE_FLOAT_STORE_MATHFN_D2 (pow)
+#define pow __float_store_pow
+#endif
+
+#ifndef __STRICT_ANSI__
+
+/* Complex number (for _cabs). This is the MS version. The ISO
+   C99 counterpart _Complex is an intrinsic type in GCC and
+   'complex' is defined as a macro.  See complex.h  */
+struct _complex
+{
+	double	x;	/* Real part */
+	double	y;	/* Imaginary part */
+};
+
+_CRTIMP int __cdecl _matherr (struct _exception *);
+
+/* These are also declared in Mingw float.h; needed here as well to work 
+   around GCC build issues.  */
+/* BEGIN FLOAT.H COPY */
+/*
+ * IEEE recommended functions
+ */
+
+_CRTIMP double __cdecl _scalb (double, long);
+
+_CRTIMP int __cdecl _finite (double);
+_CRTIMP int __cdecl _fpclass (double);
+_CRTIMP int __cdecl _isnan (double);
+
+/* END FLOAT.H COPY */
+
+/*
+ * Non-underscored versions of non-ANSI functions.
+ * These reside in liboldnames.a.
+ */
+
+#if !defined (_NO_OLDNAMES)
+
+_CRTIMP int __cdecl fpclass (double);
+
+#define FP_PNORM   _FPCLASS_PN
+
+#endif /* Not _NO_OLDNAMES */
+
+/* This require msvcr70.dll or higher. */ 
+#if __MSVCRT_VERSION__ >= 0x0700
+_CRTIMP int __cdecl _set_SSE2_enable (int);
+#endif /* __MSVCRT_VERSION__ >= 0x0700 */
+
+#endif /* __STRICT_ANSI__ */
+
+#ifndef __NO_ISOCEXT
+#if (defined (__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) \
+	|| !defined __STRICT_ANSI__ || defined __cplusplus
+
+#define INFINITY (1.0F/0.0F)
+
+/* 7.12.3.1 */
+/*
+   Return values for fpclassify.
+   These are based on Intel x87 fpu condition codes
+   in the high byte of status word and differ from
+   the return values for MS IEEE 754 extension _fpclass()
+*/
+#define FP_ZERO		0x4000
+#define FP_SUBNORMAL	(FP_NORMAL | FP_ZERO)
+/* 0x0200 is signbit mask */
+
+/*
+  We can't inline float or double, because we want to ensure truncation
+  to semantic type before classification. 
+  (A normal long double value might become subnormal when 
+  converted to double, and zero when converted to float.)
+*/
+
+extern int __cdecl __fpclassifyf (float);
+extern int __cdecl __fpclassify (double);
+
+__CRT_INLINE int __cdecl __fpclassifyl (long double x){
+  unsigned short sw;
+  __asm__ ("fxam; fstsw %%ax;" : "=a" (sw): "t" (x));
+  return sw & (FP_NAN | FP_NORMAL | FP_ZERO );
+}
+
+#define fpclassify(x) (sizeof (x) == sizeof (float) ? __fpclassifyf (x)	  \
+		       : sizeof (x) == sizeof (double) ? __fpclassify (x) \
+		       : __fpclassifyl (x))
+
+/* 7.12.3.2 */
+#define isfinite(x) ((fpclassify(x) & FP_NAN) == 0)
+
+/* 7.12.3.3 */
+#define isinf(x) (fpclassify(x) == FP_INFINITE)
+
+/* 7.12.3.4 */
+/* We don't need to worry about trucation here:
+   A NaN stays a NaN. */
+
+__CRT_INLINE int __cdecl __isnan (double _x)
+{
+  unsigned short sw;
+  __asm__ ("fxam;"
+	   "fstsw %%ax": "=a" (sw) : "t" (_x));
+  return (sw & (FP_NAN | FP_NORMAL | FP_INFINITE | FP_ZERO | FP_SUBNORMAL))
+    == FP_NAN;
+}
+
+#define isnan(x) (sizeof (x) == sizeof (float) ? __isnanf (x)	\
+		  : sizeof (x) == sizeof (double) ? __isnan (x)	\
+		  : __isnanl (x))
+
+/* 7.12.6.12  Double in C89 */
+extern float __cdecl modff (float, float*);
+extern long double __cdecl modfl (long double, long double*);
+
+
+/* 7.12.9.2 Double in C89 */
+extern float __cdecl floorf (float);
+extern long double __cdecl floorl (long double);
+
+/* 7.12.9.3 */
+extern double __cdecl nearbyint ( double);
+extern float __cdecl nearbyintf (float);
+extern long double __cdecl nearbyintl (long double);
+
+/* 7.12.9.4 */
+/* round, using fpu control word settings */
+__CRT_INLINE double __cdecl rint (double x)
+{
+  double retval;
+  __asm__ ("frndint;": "=t" (retval) : "0" (x));
+  return retval;
+}
+
+#endif
+
+#endif /* __STDC_VERSION__ >= 199901L */
+#endif /* __NO_ISOCEXT */
+
+#ifdef __cplusplus
+}
+#endif
+#endif	/* Not RC_INVOKED */
+
+#endif	/* Not _MATH_H_ */

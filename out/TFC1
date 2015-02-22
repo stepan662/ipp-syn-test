@@ -1,0 +1,81 @@
+<font color=#808080>/*<br />
+ * Interpret imperativniho jazyka IFJ14<br />
+ *<br />
+ * Autori:<br />
+ *   Jan Hrdina    (xhrdin10)<br />
+ *   Peter Gazdik  (xgazdi03)<br />
+ *   Peter Hnat    (xhnatp00)<br />
+ *   Filip Pokorny (xpokor62)<br />
+ *   Stepan Granat (xgrana02)<br />
+ */</font><br />
+<br />
+<font color=#808080>/**<br />
+ * <font color=#B9BF00>@file bit_array.h</font><br />
+ * Bitove pole pouzivane pouziva se pro overovani inicializace promennych.<br />
+ */</font><br />
+<br />
+<font color=#00A86D>#ifndef BIT_ARRAY_H</font><br />
+<font color=#00A86D>#define BIT_ARRAY_H</font><br />
+<br />
+<font color=#00A86D>#include <stdbool.h></font><br />
+<font color=#00A86D>#include <assert.h></font><br />
+<font color=#00A86D>#include "err.h"</font><br />
+<font color=#00A86D>#include "m_table.h"</font><br />
+<br />
+typedef struct BitArray {<br />
+ <font color=#780000> unsigned</font> lenght;<br />
+ <font color=#780000> unsigned</font>* data;<br />
+} BitArray;<br />
+<font color=#00A86D>#define CHAR_SIZE 8</font><br />
+<font color=#00A86D>#define BIN_U_SIZE (CHAR_SIZE * sizeof(unsigned))</font><br />
+<br />
+<font color=#808080>/**<br />
+ * <font color=#B9BF00>@brief bit_array_new vytvori nove inicializovane bitove pole o dane velikosti</font><br />
+ * <font color=#B9BF00>@param size velikost pole v bitech</font><br />
+ * <font color=#B9BF00>@return vraci ukazatel na bitove pole</font><br />
+ */</font><br />
+BitArray* bit_array_new(unsigned size);<br />
+<br />
+<font color=#808080>/**<br />
+ * <font color=#B9BF00>@brief bit_array_init vynuluje pole</font><br />
+ */</font><font color=#780000><br />
+void</font> bit_array_init(BitArray* arr);<br />
+<br />
+<font color=#808080>/**<br />
+ * <font color=#B9BF00>@brief bit_array_resize zvetsi bitove pole na pozadovanou velikost</font><br />
+ * <font color=#B9BF00>@param size nova velikost v bitech</font><br />
+ */</font><font color=#780000><br />
+void</font> bit_array_resize(BitArray* arr,<font color=#780000> unsigned</font> size);<br />
+<br />
+<font color=#808080>/** <font color=#B9BF00>@brief bit_array_set nastavi bit na dane pozici */</font></font><br />
+inline<font color=#780000> void</font> bit_array_set(BitArray* arr,<font color=#780000> unsigned</font> index,<font color=#780000> bool</font> value) {<br />
+  assert(index <= arr->lenght);<br />
+ <font color=#780000> unsigned</font> offset = index % BIN_U_SIZE;<br />
+  index /= BIN_U_SIZE;<br />
+ <font color=#2F00BD> if</font> (value) {<br />
+    arr->data[index] |= ((unsigned)1) << (offset);<br />
+  }<font color=#2F00BD> else</font> {<br />
+    arr->data[index] &= (~(((unsigned)1) << (offset)));<br />
+  }<br />
+  return;<br />
+}<br />
+<br />
+<font color=#808080>/**<br />
+ * <font color=#B9BF00>@brief bit_array_get vraci bitovou hodnotu na urcene pozici</font><br />
+ * <font color=#B9BF00>@param index index pocitany v bitech</font><br />
+ * <font color=#B9BF00>@return hodnotu bitu na dane pozici</font><br />
+ */</font><br />
+inline<font color=#780000> bool</font> bit_array_get(BitArray* arr,<font color=#780000> unsigned</font> index) {<br />
+  assert(index <= arr->lenght);<br />
+ <font color=#780000> unsigned</font>* tmp = arr->data;<br />
+  tmp += (index / BIN_U_SIZE);<br />
+  index %= BIN_U_SIZE;<br />
+  return (*tmp >> index) & ((unsigned)1);<br />
+}<br />
+<font color=#780000><br />
+void</font> bit_array_print(BitArray* arr);<br />
+<font color=#780000><br />
+void</font> bit_array_destroy(BitArray* arr);<br />
+<br />
+<font color=#00A86D>#endif <font color=#808080>// BIT_ARRAY_H</font></font><br />
+<br />

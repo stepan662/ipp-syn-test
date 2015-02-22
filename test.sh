@@ -1,11 +1,11 @@
 #!/bin/bash
-# Spusteni s parametrem "keep" zabrani smazani docasnych souboru s vystupy
 
-BINARY="../IPP1/ipp1.php"
+SCRIPT="../IPP1/ipp1.php"
+INTERPRETER="php"
 
-if [ `basename "$PWD"` != "IPP1-tests" ]; then
-	cd "../IPP1-tests"
-	if [ `basename "$PWD"` != "IPP1-tests" ]; then
+if [ `basename "$PWD"` != "ipp-syn-test" ]; then
+	cd "../ipp-syn-test"
+	if [ `basename "$PWD"` != "ipp-syn-test" ]; then
 		echo "Spustte skript ve slozce s projektem nebo ve slozce s testy."
 		exit 1
 	fi
@@ -26,7 +26,7 @@ function run_test {
 
 	printf ">>> %-7s %-59s " "Test$count" "$4"
 
-	printf ""|php $BINARY $3 1> "test.out" 2> "err.out"
+	printf ""|$INTERPRETER $SCRIPT $3 1> "test.out" 2> "err.out"
 	exit_code="$?"
 
 	if [ "$1" = "" ]; then
@@ -39,11 +39,10 @@ function run_test {
 
 	if [ "$diffCode" = "0" ] && [ "$exit_code" = "$2" ]; then
 		echo -e "[  ${green}OK${NC}  ]"
-#		echo php $BINARY $2
 		((ok_count++))
 	else
 		echo -e "[ ${red}FAIL${NC} ]"
-		echo "php" "$BINARY" "$3"
+		echo "$INTERPRETER" "$SCRIPT" "$3"
 		cat "err.out"
 		echo "Exit code: $exit_code"
 		printf "%s" "$diffout"
@@ -57,7 +56,7 @@ function run_test {
 
 echo
 echo
-echo -e "\t\t\t\t\t${red}IPP1 TESTY${NC}"
+echo -e "\t\t\t\t\t${green}IPP1 TESTY${NC}"
 
 echo
 echo -e "${green}Testy parametrů${NC}"
@@ -113,21 +112,41 @@ run_test	"TF6"				0 	"--input=TFI5 --format=TF10"											"Jednoduche formatov
 run_test	"TF7"				0 	"--input=TFI6 --format=TF11"											"Aplikovani tagu ve spravnem poradi"
 run_test	"TF8"				0 	"--input=TFI7 --format=TF12"											"Neformatujeme prazdne retezce"
 run_test	"TF9"				0 	"--input=TFI8 --format=TF13"											"Test negace"
+#toto se resilo na foru, ale stale mi to neni uplne jasne
 run_test	"TF3"				0 	"--input=TFI2 --format=TF1"												"Html znacky jsou brany jako normalni znaky"
 run_test	"TF10"			0 	"--input=TFI9 --format=TF14"											"Html znacky v textu i v reg. vyrazu"
+
 run_test	"TF4"				0 	"--input=TFI3 --format=TF1"												"Diakritika v textu"
 run_test	"TF5"				0 	"--input=TFI4 --format=TF8"												"Diakritika v textu i v reg. vyrazu"
 run_test	"TF5"				0 	"--input=TFI4 --format=TF9"												"Diakritika v textu i v reg. vyrazu"
 run_test	"TF11"			0 	"--input=TFI1 --format=TF1 --br"									"Aplikace tagu <br />"
 
 echo
+echo -e "${green}Testy slozitejsich prikladu${NC}"
+echo
+
+run_test	"TFC1"			0 	"--input=TFCI1 --format=TFCF1 --br"								"Hlavickovy soubor"
+
+#Toto je opravdu narocny test, ale odhalil jsem na nem nekolik chyb
+#Je to hodne osekany math.h, aby vyhodnocovani netrvalu pul hodiny
+run_test	"TFC2"			0 	"--input=TFCI2 --format=TFCF2 --br"								"Slozity hlavickovy soubor"
+run_test	""					4 	"--input=TFCI3 --format=TFCF3"										"Chybny regularni vyraz"
+
+
+
+echo
 echo -e "${red}Testy rozsireni HTM${NC}"
 echo
 
+
 run_test 	"TV1"				0 	"--input=TVI1 --format=TVF1 --validate"						"Test jednoduche validace"
 run_test 	"TV2"				0 	"--input=TVI2 --format=TVF2 --validate"						"Test slozitejsi validace"
+
+#naprosto netusim, jestli je tenhle vystup spravne, ale tagy se nekrizi - to jsem overoval
 run_test 	"TV3"				0 	"--input=TVI3 --format=TVF3 --validate"						"Test velmi komplikovane validace"
 
+run_test 	"TV4"				0   "--input=TVI4 --format=TVF4 --escape"							"Test escapovani"
+run_test 	"TV5"				0   "--input=TVI5 --format=TVF5 --escape --validate"	"Test validace i escapovani"
 
 
 

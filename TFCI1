@@ -1,0 +1,81 @@
+/*
+ * Interpret imperativniho jazyka IFJ14
+ *
+ * Autori:
+ *   Jan Hrdina    (xhrdin10)
+ *   Peter Gazdik  (xgazdi03)
+ *   Peter Hnat    (xhnatp00)
+ *   Filip Pokorny (xpokor62)
+ *   Stepan Granat (xgrana02)
+ */
+
+/**
+ * @file bit_array.h
+ * Bitove pole pouzivane pouziva se pro overovani inicializace promennych.
+ */
+
+#ifndef BIT_ARRAY_H
+#define BIT_ARRAY_H
+
+#include <stdbool.h>
+#include <assert.h>
+#include "err.h"
+#include "m_table.h"
+
+typedef struct BitArray {
+  unsigned lenght;
+  unsigned* data;
+} BitArray;
+#define CHAR_SIZE 8
+#define BIN_U_SIZE (CHAR_SIZE * sizeof(unsigned))
+
+/**
+ * @brief bit_array_new vytvori nove inicializovane bitove pole o dane velikosti
+ * @param size velikost pole v bitech
+ * @return vraci ukazatel na bitove pole
+ */
+BitArray* bit_array_new(unsigned size);
+
+/**
+ * @brief bit_array_init vynuluje pole
+ */
+void bit_array_init(BitArray* arr);
+
+/**
+ * @brief bit_array_resize zvetsi bitove pole na pozadovanou velikost
+ * @param size nova velikost v bitech
+ */
+void bit_array_resize(BitArray* arr, unsigned size);
+
+/** @brief bit_array_set nastavi bit na dane pozici */
+inline void bit_array_set(BitArray* arr, unsigned index, bool value) {
+  assert(index <= arr->lenght);
+  unsigned offset = index % BIN_U_SIZE;
+  index /= BIN_U_SIZE;
+  if (value) {
+    arr->data[index] |= ((unsigned)1) << (offset);
+  } else {
+    arr->data[index] &= (~(((unsigned)1) << (offset)));
+  }
+  return;
+}
+
+/**
+ * @brief bit_array_get vraci bitovou hodnotu na urcene pozici
+ * @param index index pocitany v bitech
+ * @return hodnotu bitu na dane pozici
+ */
+inline bool bit_array_get(BitArray* arr, unsigned index) {
+  assert(index <= arr->lenght);
+  unsigned* tmp = arr->data;
+  tmp += (index / BIN_U_SIZE);
+  index %= BIN_U_SIZE;
+  return (*tmp >> index) & ((unsigned)1);
+}
+
+void bit_array_print(BitArray* arr);
+
+void bit_array_destroy(BitArray* arr);
+
+#endif // BIT_ARRAY_H
+

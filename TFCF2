@@ -1,0 +1,5 @@
+/%*(!/|%W/)*%*/															color:808080
+(#!%s+)|static|extern|sizeof								color:DB0000
+%s(int|float|double|long|char|unsigned)%s		color:0041B0
+(%d)+(%.)(%d)+															color:1B0087
+"(!")*"																			color:999600

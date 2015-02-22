@@ -1,0 +1,6 @@
+/%*(!/)*%*/	color:808080
+//!%n*	color:808080
+#!%n*	color:00A86D
+@%W!%n*	color:B9BF00
+%s(unsigned|int|void|float|double|long|bool)	color:780000
+%s(if|else|for|while|do)	color:2F00BD
