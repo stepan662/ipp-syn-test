@@ -2,7 +2,7 @@
 
 ### Testy k IPP projektu SYN (zvýraznění syntaxe) ###
 
-Obsahuje testy na většinu chytáků ze zadání
+Snažil jsem se obsáhnout co nejvíce věcí ze zadání, ale je dost pravděpodobné, že jsem něco přehlídl či špatně pochopil. 
 
 ### Jak to nastavit, aby to fungovalo? ###
 
