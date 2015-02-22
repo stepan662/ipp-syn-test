@@ -103,6 +103,8 @@ run_test	""					4 	"--format=TF6 --input=TFI1"												"FS spatna velikost pi
 run_test	""					4 	"--format=TF7"																		"FS ascii < 32 v regularnim vyrazu"
 run_test	"TF2"				0 	"--input=TFI1"																		"FS chybi: vystup = vstup"
 run_test	"TF2"				0 	"--input=TFI1 --format=bla"												"FS neexistuje: vystup = vstup"
+run_test	""					4 	"--input=TFI11 --format=TF16"											"FS reg. vyraz chybi zavorka"
+#run_test	""					4 	"--input=TFI11 --format=TF17"											"FS reg. a.*"
 
 echo
 echo -e "${green}Testy spravneho formatovani${NC}"
@@ -112,6 +114,8 @@ run_test	"TF6"				0 	"--input=TFI5 --format=TF10"											"Jednoduche formatov
 run_test	"TF7"				0 	"--input=TFI6 --format=TF11"											"Aplikovani tagu ve spravnem poradi"
 run_test	"TF8"				0 	"--input=TFI7 --format=TF12"											"Neformatujeme prazdne retezce"
 run_test	"TF9"				0 	"--input=TFI8 --format=TF13"											"Test negace"
+run_test	"TF14"			0 	"--input=TFI10 --format=TF15"											"Test negace zavorky"
+
 #toto se resilo na foru, ale stale mi to neni uplne jasne
 run_test	"TF3"				0 	"--input=TFI2 --format=TF1"												"Html znacky jsou brany jako normalni znaky"
 run_test	"TF10"			0 	"--input=TFI9 --format=TF14"											"Html znacky v textu i v reg. vyrazu"
@@ -130,7 +134,6 @@ run_test	"TFC1"			0 	"--input=TFCI1 --format=TFCF1 --br"								"Hlavickovy soub
 #Toto je opravdu narocny test, ale odhalil jsem na nem nekolik chyb
 #Je to hodne osekany math.h, aby vyhodnocovani netrvalu pul hodiny
 run_test	"TFC2"			0 	"--input=TFCI2 --format=TFCF2 --br"								"Slozity hlavickovy soubor"
-run_test	""					4 	"--input=TFCI3 --format=TFCF3"										"Chybny regularni vyraz"
 
 
 
