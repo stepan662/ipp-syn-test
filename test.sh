@@ -100,13 +100,13 @@ run_test 	""					1 	"--input=TP1 --input=TP1" 												"Duplicitni parametr -
 run_test 	""					1 	"--br --br" 														 					"Duplicitni prepinac - chyba"
 run_test	""					2 	"--input=bla"																			"Neexistujici input"
 run_test 	""					0 	"--input=TP1 --output=TP2 --format=TP1"		 				"Vstup ok"
-run_test 	""					0 	"--input='TP1'"																		"Cesta k souboru v apostrofech"
-run_test	"TF2"				0 	"--input='test folder/TFI1' --format=TP1"					"Nazev slozky s mezerami apostrofy"
-run_test	"TF2"				0 	"--input='TFI1' --format='test folder/TP1'"				"Nazev slozky s mezerami apostrofy"
-run_test	"TF2"				0 	"--input=\"test folder/TFI1\" --format=TP1"				"Nazev slozky s mezerami uvozovky"
-run_test	"TF2"				0 	"--input='TFI1' --format=\"test folder/TP1\""			"Nazev slozky s mezerami uvozovky"
-run_test	""					0 	"--input='TFI1' --output='test folder/out'"				"Nazev slozky s mezerami uvozovky"
-run_test	""					1 	"--input=TFI1 --format=test folder/TP1"						"Nazev slozky s mezerami bez uvozovek"
+#run_test 	""					0 	"--input='TP1'"																		"Cesta k souboru v apostrofech"
+#run_test	"TF2"				0 	"--input='test folder/TFI1' --format=TP1"					"Nazev slozky s mezerami apostrofy"
+#run_test	"TF2"				0 	"--input='TFI1' --format='test folder/TP1'"				"Nazev slozky s mezerami apostrofy"
+#run_test	"TF2"				0 	"--input=\"test folder/TFI1\" --format=TP1"				"Nazev slozky s mezerami uvozovky"
+#run_test	"TF2"				0 	"--input='TFI1' --format=\"test folder/TP1\""			"Nazev slozky s mezerami uvozovky"
+#run_test	""					0 	"--input='TFI1' --output='test folder/out'"				"Nazev slozky s mezerami uvozovky"
+#run_test	""					1 	"--input=TFI1 --format=test folder/TP1"						"Nazev slozky s mezerami bez uvozovek"
 
 echo
 echo -e "${green}Testy zkracenych parametru${NC}"
@@ -180,6 +180,10 @@ run_test 	"TV3"				0 	"--input=TVI3 --format=TVF3 --validate"						"Test velmi k
 run_test 	"TV4"				0   "--input=TVI4 --format=TVF4 --escape"							"Test escapovani"
 run_test 	"TV5"				0   "--input=TVI5 --format=TVF5 --escape --validate"	"Test validace i escapovani"
 
+
+echo
+echo -e "${green}Referenční testy${NC}"
+echo
 
 # cesty ke vstupním a výstupním souborům
 LOCAL_IN_PATH="" # (simple relative path)
