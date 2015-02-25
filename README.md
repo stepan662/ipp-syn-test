@@ -2,8 +2,8 @@
 
 ### Testy k IPP projektu SYN (zvýraznění syntaxe) ###
 
-Snažil jsem se obsáhnout co nejvíce věcí ze zadání, ale je dost pravděpodobné, že jsem něco přehlídl či špatně pochopil.
-Update: Přidal jsem i referenční testy přímo od vyučujících, které jsou pouze automaticky kontrolované
+Snažil jsem se obsáhnout co nejvíce věcí ze zadání, ale je dost pravděpodobné, že jsem něco přehlídl či špatně pochopil.  
+Update: Přidal jsem i referenční testy přímo od vyučujících, které jsou pouze zautomatizované
 
 ### Jak to nastavit, aby to fungovalo? ###
 
