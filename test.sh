@@ -153,6 +153,10 @@ run_test	"TF4"				0 	"--input=TFI3 --format=TF1"												"Diakritika v textu"
 run_test	"TF5"				0 	"--input=TFI4 --format=TF8"												"Diakritika v textu i v reg. vyrazu"
 run_test	"TF5"				0 	"--input=TFI4 --format=TF9"												"Diakritika v textu i v reg. vyrazu"
 run_test	"TF11"			0 	"--input=TFI1 --format=TF1 --br"									"Aplikace tagu <br />"
+run_test	"TF15"			0		"--input=TFI12 --format=TF18"											"Kontrola spravneho escapovani"
+run_test	"TF16"			0		"--input=TFI13 --format=TF19"											"Test slozitejsi negace"
+
+
 
 echo
 echo -e "${green}Testy slozitejsich prikladu${NC}"
