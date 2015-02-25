@@ -52,6 +52,35 @@ function run_test {
 	rm "err.out"
 }
 
+function check_ref_test {
+	((count++))
+	if [ "$1" -lt "10" ]; then
+		num="0$1"
+	else
+		num="$1"
+	fi
+
+
+	printf ">>> %-10s %-56s " "RefTest$1" ""
+	if [ -f test$num.txt ]; then
+		diffOut="Diffout\n`diff "ref-st/test$num.out" "ref-out/test$num.out"`\n"
+		retOut=$?
+	else
+		retOut="0"
+	fi
+	diffRet="DiffRet\n`diff ref-st/test$num'.!!!' ref-out/test$num'.!!!'`\n"
+	retRet=$?
+	if [ "$retOut" = "0" ] && [ "$retRet" = "0" ]; then
+		echo -e "[  ${green}OK${NC}  ]"
+		((ok_count++))
+	else
+		echo -e "[ ${red}FAIL${NC} ]"
+		tail ref-st/test$num.err
+		printf "%s" "$diffRet"
+		echo
+	fi
+}
+
 ################################################################################
 
 echo
@@ -151,6 +180,115 @@ run_test 	"TV3"				0 	"--input=TVI3 --format=TVF3 --validate"						"Test velmi k
 run_test 	"TV4"				0   "--input=TVI4 --format=TVF4 --escape"							"Test escapovani"
 run_test 	"TV5"				0   "--input=TVI5 --format=TVF5 --escape --validate"	"Test validace i escapovani"
 
+
+# cesty ke vstupním a výstupním souborům
+LOCAL_IN_PATH="" # (simple relative path)
+LOCAL_IN_PATH2="" #Alternative 1 (primitive relative path)
+LOCAL_IN_PATH3="" #Alternative 2 (absolute path)
+LOCAL_OUT_PATH="ref-st/" # (simple relative path)
+LOCAL_OUT_PATH2="ref-st/" #Alternative 1 (primitive relative path)
+LOCAL_OUT_PATH3="ref-st/" #Alternative 2 (absolute path)
+# cesta pro ukládání chybového výstupu studentského skriptu
+LOG_PATH="ref-st/"
+
+if [ ! -d "ref-st" ]; then
+	mkdir "ref-st"
+fi
+
+# test01: Argument error; Expected output: test01.out; Expected return code: 1
+$INTERPRETER $SCRIPT --error 2> ${LOG_PATH}test01.err
+echo -n $? > ${LOCAL_OUT_PATH}test01.!!!
+
+# test02: Input error; Expected output: test02.out; Expected return code: 2
+$INTERPRETER $SCRIPT --input=nonexistent --output=${LOCAL_OUT_PATH3}test02.out 2> ${LOG_PATH}test02.err
+echo -n $? > ${LOCAL_OUT_PATH}test02.!!!
+
+# test03: Output error; Expected output: test03.out; Expected return code: 3
+$INTERPRETER $SCRIPT --input=${LOCAL_IN_PATH3}empty --output=nonexistent/${LOCAL_OUT_PATH2}test03.out 2> ${LOG_PATH}test03.err
+echo -n $? > ${LOCAL_OUT_PATH}test03.!!!
+
+# test04: Format table error - nonexistent parameter; Expected output: test04.out; Expected return code: 4
+$INTERPRETER $SCRIPT --input=${LOCAL_IN_PATH3}empty --output=${LOCAL_OUT_PATH}test04.out --format=error-parameter.fmt 2> ${LOG_PATH}test04.err
+echo -n $? > ${LOCAL_OUT_PATH}test04.!!!
+
+# test05: Format table error - size; Expected output: test05.out; Expected return code: 4
+$INTERPRETER $SCRIPT --input=${LOCAL_IN_PATH}empty --output=${LOCAL_OUT_PATH3}test05.out --format=error-size.fmt 2> ${LOG_PATH}test05.err
+echo -n $? > ${LOCAL_OUT_PATH}test05.!!!
+
+# test06: Format table error - color; Expected output: test06.out; Expected return code: 4
+$INTERPRETER $SCRIPT --input=${LOCAL_IN_PATH2}empty --output=${LOCAL_OUT_PATH}test06.out --format=error-color.fmt 2> ${LOG_PATH}test06.err
+echo -n $? > ${LOCAL_OUT_PATH}test06.!!!
+
+# test07: Format table error - RE syntax; Expected output: test07.out; Expected return code: 4
+$INTERPRETER $SCRIPT --input=${LOCAL_IN_PATH3}empty --output=${LOCAL_OUT_PATH3}test07.out --format=error-re.fmt 2> ${LOG_PATH}test07.err
+echo -n $? > ${LOCAL_OUT_PATH}test07.!!!
+
+# test08: Empty files; Expected output: test08.out; Expected return code: 0
+$INTERPRETER $SCRIPT --input=${LOCAL_IN_PATH2}empty --output=${LOCAL_OUT_PATH3}test08.out --format=empty 2> ${LOG_PATH}test08.err
+echo -n $? > ${LOCAL_OUT_PATH}test08.!!!
+
+# test09: Format parameters; Expected output: test09.out; Expected return code: 0
+$INTERPRETER $SCRIPT --input=${LOCAL_IN_PATH2}basic-parameter.in --output=${LOCAL_OUT_PATH3}test09.out --format=basic-parameter.fmt 2> ${LOG_PATH}test09.err
+echo -n $? > ${LOCAL_OUT_PATH}test09.!!!
+
+# test10: Argument swap; Expected output: test10.out; Expected return code: 0
+$INTERPRETER $SCRIPT --format=basic-parameter.fmt --output=${LOCAL_OUT_PATH3}test10.out --input=${LOCAL_IN_PATH}basic-parameter.in 2> ${LOG_PATH}test10.err
+echo -n $? > ${LOCAL_OUT_PATH}test10.!!!
+
+# test11: Standard input/output; Expected output: test11.out; Expected return code: 0
+$INTERPRETER $SCRIPT --format=basic-parameter.fmt >${LOCAL_OUT_PATH3}test11.out <${LOCAL_IN_PATH}basic-parameter.in 2> ${LOG_PATH}test11.err
+echo -n $? > ${LOCAL_OUT_PATH}test11.!!!
+
+# test12: Basic regular expressions; Expected output: test12.out; Expected return code: 0
+$INTERPRETER $SCRIPT --input=${LOCAL_IN_PATH2}basic-re.in --output=${LOCAL_OUT_PATH3}test12.out --format=basic-re.fmt 2> ${LOG_PATH}test12.err
+echo -n $? > ${LOCAL_OUT_PATH}test12.!!!
+
+# test13: Special regular expressions; Expected output: test13.out; Expected return code: 0
+$INTERPRETER $SCRIPT --input=${LOCAL_IN_PATH3}special-re.in --output=${LOCAL_OUT_PATH3}test13.out --format=special-re.fmt 2> ${LOG_PATH}test13.err
+echo -n $? > ${LOCAL_OUT_PATH}test13.!!!
+
+# test14: Special RE - symbols; Expected output: test14.out; Expected return code: 0
+$INTERPRETER $SCRIPT --input=${LOCAL_IN_PATH2}special-symbols.in --output=${LOCAL_OUT_PATH2}test14.out --format=special-symbols.fmt 2> ${LOG_PATH}test14.err
+echo -n $? > ${LOCAL_OUT_PATH}test14.!!!
+
+# test15: Negation; Expected output: test15.out; Expected return code: 0
+$INTERPRETER $SCRIPT --input=${LOCAL_IN_PATH}negation.in --output=${LOCAL_OUT_PATH3}test15.out --format=negation.fmt 2> ${LOG_PATH}test15.err
+echo -n $? > ${LOCAL_OUT_PATH}test15.!!!
+
+# test16: Multiple format parameters; Expected output: test16.out; Expected return code: 0
+$INTERPRETER $SCRIPT --input=${LOCAL_IN_PATH3}multiple.in --output=${LOCAL_OUT_PATH3}test16.out --format=multiple.fmt 2> ${LOG_PATH}test16.err
+echo -n $? > ${LOCAL_OUT_PATH}test16.!!!
+
+# test17: Spaces/tabs in format parameters; Expected output: test17.out; Expected return code: 0
+$INTERPRETER $SCRIPT --input=${LOCAL_IN_PATH3}multiple.in --output=${LOCAL_OUT_PATH3}test17.out --format=spaces.fmt 2> ${LOG_PATH}test17.err
+echo -n $? > ${LOCAL_OUT_PATH}test17.!!!
+
+# test18: Line break tag; Expected output: test18.out; Expected return code: 0
+$INTERPRETER $SCRIPT --input=${LOCAL_IN_PATH3}newlines.in --output=${LOCAL_OUT_PATH}test18.out --format=empty --br 2> ${LOG_PATH}test18.err
+echo -n $? > ${LOCAL_OUT_PATH}test18.!!!
+
+# test19: Overlap; Expected output: test19.out; Expected return code: 0
+$INTERPRETER $SCRIPT --input=${LOCAL_IN_PATH2}overlap.in --output=${LOCAL_OUT_PATH3}test19.out --format=overlap.fmt 2> ${LOG_PATH}test19.err
+echo -n $? > ${LOCAL_OUT_PATH}test19.!!!
+
+# test20: Perl RE; Expected output: test20.out; Expected return code: 0
+$INTERPRETER $SCRIPT --input=${LOCAL_IN_PATH3}special-symbols.in --output=${LOCAL_OUT_PATH3}test20.out --format=re.fmt 2> ${LOG_PATH}test20.err
+echo -n $? > ${LOCAL_OUT_PATH}test20.!!!
+
+# test21: Example; Expected output: test21.out; Expected return code: 0
+$INTERPRETER $SCRIPT --input=${LOCAL_IN_PATH2}example.in --br --format=example.fmt > ${LOCAL_OUT_PATH3}test21.out 2> ${LOG_PATH}test21.err
+echo -n $? > ${LOCAL_OUT_PATH}test21.!!!
+
+# test22: Simple C program; Expected output: test22.out; Expected return code: 0
+$INTERPRETER $SCRIPT --input=${LOCAL_IN_PATH2}cprog.c --br --format=c.fmt > ${LOCAL_OUT_PATH2}test22.out 2> ${LOG_PATH}test22.err
+echo -n $? > ${LOCAL_OUT_PATH}test22.!!!
+
+
+
+for i in {1..22}
+do
+	check_ref_test $i
+done
 
 
 

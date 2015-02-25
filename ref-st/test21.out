@@ -1,0 +1,7 @@
+<b>if</b> a>b <b>then</b><br />
+	p = 89%<br />
+<b>else</b><br />
+	p = 100%<br />
+end <b>if</b><br />
+<br />
+string s = <i><font color=#FFFF44>"string evaluation test"</font></i><br />
