@@ -175,14 +175,14 @@ echo -e "${red}Testy rozsireni HTM${NC}"
 echo
 
 
-run_test 	"TV1"				0 	"--input=TVI1 --format=TVF1 --validate"						"Test jednoduche validace"
-run_test 	"TV2"				0 	"--input=TVI2 --format=TVF2 --validate"						"Test slozitejsi validace"
+run_test 	"TV1"				0 	"--input=TVI1 --format=TVF1 --nooverlap"						"Test jednoduche validace"
+run_test 	"TV2"				0 	"--input=TVI2 --format=TVF2 --nooverlap"						"Test slozitejsi validace"
 
 #naprosto netusim, jestli je tenhle vystup spravne, ale tagy se nekrizi - to jsem overoval
-run_test 	"TV3"				0 	"--input=TVI3 --format=TVF3 --validate"						"Test velmi komplikovane validace"
+run_test 	"TV3"				0 	"--input=TVI3 --format=TVF3 --nooverlap"						"Test velmi komplikovane validace"
 
 run_test 	"TV4"				0   "--input=TVI4 --format=TVF4 --escape"							"Test escapovani"
-run_test 	"TV5"				0   "--input=TVI5 --format=TVF5 --escape --validate"	"Test validace i escapovani"
+run_test 	"TV5"				0   "--input=TVI5 --format=TVF5 --escape --nooverlap"	"Test validace i escapovani"
 
 
 echo
