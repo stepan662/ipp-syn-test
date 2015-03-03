@@ -100,7 +100,7 @@ run_test 	""					1 	"--input=TP1 --input=TP1" 												"Duplicitni parametr -
 run_test 	""					1 	"--br --br" 														 					"Duplicitni prepinac - chyba"
 run_test	""					2 	"--input=bla"																			"Neexistujici input"
 run_test 	""					0 	"--input=TP1 --output=TP2 --format=TP1"		 				"Vstup ok"
-#run_test 	""					0 	"--input='TP1'"																		"Cesta k souboru v apostrofech"
+#run_test ""					0 	"--input='TP1'"																		"Cesta k souboru v apostrofech"
 #run_test	"TF2"				0 	"--input='test folder/TFI1' --format=TP1"					"Nazev slozky s mezerami apostrofy"
 #run_test	"TF2"				0 	"--input='TFI1' --format='test folder/TP1'"				"Nazev slozky s mezerami apostrofy"
 #run_test	"TF2"				0 	"--input=\"test folder/TFI1\" --format=TP1"				"Nazev slozky s mezerami uvozovky"
@@ -176,11 +176,11 @@ echo -e "${red}Testy rozsireni HTM${NC}"
 echo
 
 
-run_test 	"TV1"				0 	"--input=TVI1 --format=TVF1 --nooverlap"						"Test jednoduche validace"
-run_test 	"TV2"				0 	"--input=TVI2 --format=TVF2 --nooverlap"						"Test slozitejsi validace"
+run_test 	"TV1"				0 	"--input=TVI1 --format=TVF1 --nooverlap"					"Test jednoduche validace"
+run_test 	"TV2"				0 	"--input=TVI2 --format=TVF2 --nooverlap"					"Test slozitejsi validace"
 
 #naprosto netusim, jestli je tenhle vystup spravne, ale tagy se nekrizi - to jsem overoval
-run_test 	"TV3"				0 	"--input=TVI3 --format=TVF3 --nooverlap"						"Test velmi komplikovane validace"
+run_test 	"TV3"				0 	"--input=TVI3 --format=TVF3 --nooverlap"					"Test velmi komplikovane validace"
 
 run_test 	"TV4"				0   "--input=TVI4 --format=TVF4 --escape"							"Test escapovani"
 run_test 	"TV5"				0   "--input=TVI5 --format=TVF5 --escape --nooverlap"	"Test validace i escapovani"
