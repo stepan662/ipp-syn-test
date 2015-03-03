@@ -133,7 +133,7 @@ run_test	""					4 	"--format=TF7"																		"FS ascii < 32 v regularnim v
 run_test	"TF2"				0 	"--input=TFI1"																		"FS chybi: vystup = vstup"
 run_test	"TF2"				0 	"--input=TFI1 --format=bla"												"FS neexistuje: vystup = vstup"
 run_test	""					4 	"--input=TFI11 --format=TF16"											"FS reg. vyraz chybi zavorka"
-#run_test	""					4 	"--input=TFI11 --format=TF17"											"FS reg. a.*"
+run_test	""					4 	"--input=TFI11 --format=TF17"											"FS reg. a.*"
 
 echo
 echo -e "${green}Testy spravneho formatovani${NC}"
@@ -148,6 +148,7 @@ run_test	"TF14"			0 	"--input=TFI10 --format=TF15"											"Test negace zavork
 #toto se resilo na foru, ale stale mi to neni uplne jasne
 run_test	"TF3"				0 	"--input=TFI2 --format=TF1"												"Html znacky jsou brany jako normalni znaky"
 run_test	"TF10"			0 	"--input=TFI9 --format=TF14"											"Html znacky v textu i v reg. vyrazu"
+run_test  ""					0 	"--input=TFI14 --format=TF20 -o=out/TF17"											"Spravne poradi html znacek"
 
 run_test	"TF4"				0 	"--input=TFI3 --format=TF1"												"Diakritika v textu"
 run_test	"TF5"				0 	"--input=TFI4 --format=TF8"												"Diakritika v textu i v reg. vyrazu"
