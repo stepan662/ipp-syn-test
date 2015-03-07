@@ -62,7 +62,7 @@ function check_ref_test {
 
 
 	printf ">>> %-10s %-56s " "RefTest$1" ""
-	if [ -f test$num.txt ]; then
+	if [ -f ref-out/test$num.out ] && [ -s ref-out/test$num.out ]; then
 		diffOut="Diffout\n`diff "ref-st/test$num.out" "ref-out/test$num.out"`\n"
 		retOut=$?
 	else
@@ -77,6 +77,7 @@ function check_ref_test {
 		echo -e "[ ${red}FAIL${NC} ]"
 		tail ref-st/test$num.err
 		printf "%s" "$diffRet"
+		printf "%s" "$diffOut"
 		echo
 	fi
 }
