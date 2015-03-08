@@ -126,6 +126,7 @@ echo -e "${green}Testy formatovaciho souboru${NC}"
 echo
 run_test 	"TF1"				0 	"--format=TF1 --input=TFI1"												"FS v poradku"
 run_test 	"TF1"				0 	"--format=TF2 --input=TFI1"												"FS vice tabulatoru - ok"
+run_test	"TF1"				0 	"--format=TF21 --input=TFI1"											"FS prazdne radky - ok podle fora"
 run_test	""					4 	"--format=TF3 --input=TFI1"												"FS chybi formatovaci cast"
 run_test	""					4 	"--format=TF4 --input=TFI1"												"FS neznama form. znacka 'itali'"
 run_test	""					4 	"--format=TF5 --input=TFI1"												"FS spatny format barvy"
